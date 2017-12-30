@@ -1,0 +1,111 @@
+Cyber Security Base - Course Project I (1000 words)
+
+
+Write a brief (1000 words) report that outlines how the flaws in your software can be first identified and then fixed. For identification, use the format from the third part of the Securing Software course.
+
+APPLICATION DISCRIPTION
+
+The application is a simple signup, where people can signup, with their name and address (Which in this case are also their username and password). When their are signed up they can read and leave anonymous feedback. Feedback can be send to to Admin (ADMIN) or other Signups (USER) or both. Admin which has username "ted" and password "ted" has administrative view /register, where he can list signups, and comments that they have send to him or he can remove them. The admin can also query signups by name.
+
+APPLICATION SOURCE
+
+https://github.com/CountCode/CCourceProjectI
+
+The application consists of four views.
+
+/form
+The sign up page where users sign up using their name and password. After sign up the users get ro the /done view.
+
+/done
+In this view users see all feedback that was send to users and here they can also send feedback to other users or admin.
+
+/register
+This is the administrative view
+
+/signup/{id}
+The view for individual signup for the admin. Here he can (edit or) delete the signup
+
+DATABASE SCHEMAS
+
+SIGNUP
+id BIGINT(19) NOT NULL
+address VARCHAR(255)
+name VARCHAR(255)
+
+FEEDBACK
+id BIGINT(19) NOT NULL
+adm BOOLEAN(1)
+audience BOOLEAN(1)
+content VARCHAR(255)
+
+Username and passwords are stored in a MAP in the CustomUserDetailsService.java class.
+
+The task is to create a web application that has at least five different flaws from the OWASP top ten list (https://www.owasp.org/index.php/Top_10_2013-Top_10).
+
+A1-Injection
+1. Open the application http://localhost:8080
+2. Change the path to /register which is used for administrative tasks
+3. Sign in using username ted and password ted
+(This query could have been inplemented on the done-view sso that 
+the attacker wouldn't have need the credentials.)
+4. in the Query Name field you can give you sql injection like
+Select * from signup where name=' YOUR STRING ';
+YOUR STRING = ' or id>'0
+5. The query fetches all the sigups.
+(The method cut corners and uses SQL fetched ids to fetch actual signup-objects from database)
+
+To fix this you should parametrize your query or let the JpaRepository take care of the query.
+
+A3-Cross-siteScripting (XSS)
+For some reason the developer wanted to unescaped text when outputing the feedbacks.
+1. Sign up with whaterver name and address and login with the name as username and address as the password
+2. In the Register you can write your script to the content field:
+<b onmouseover=alert('XSS!')>Click me!</b>
+and submit it.
+3. 
+now when you hover your mouse over the text "Click me!" your script is run
+and you see pop-up with "XSS!"
+
+The vulnerability can be fixed changing “unescaped text” attribute th:utext  to th:text
+which escapes the outputed feedbacks.
+
+A4-Insecure Direct Object References
+1. Sign up with whaterver name and address and login with the name as username and address as the password.
+2. change the path to /signup/1 to get the signup view.
+3. changing the Long value you can go other signup views.
+
+To make this harder you should use longer random strings like UUID as id instead of Long values.
+
+A5-Secure Misconfiguration
+For debuging purposes the developers configured the h2-console access open.
+This can be exploited:
+1. In your browser go to application and add path "/h2-console"
+http://localhost:8080/h2-console
+2. In the opened for check that
+JDBC URL: jdbc:h2:mem:testdb
+User Name: sa
+3. Click "Connect"
+4. Now you are in h2 database webconsole which you can manipulate giving SQL commands.
+
+This vulnarability can be fixed in SecurityConfiguration.java in configure method removing 
+line: 
+           .antMatchers("/h2-console/**").permitAll()
+or changing it so that it gives the admin access rights
+           .antMatchers("/h2-console/**").hasAuthority("ADMIN")
+
+A7-Missing Function Level Access Control
+The developers have left two admin funcions without proper authorization GET /signup/{id} and DELETE /signup/{id}
+1. Sign up with whaterver name and address and login with the name as username and address as the password.
+2. change the path to /signup/1 or some other proper Long value.
+3. You'll see the data for data particular signup and Delete-button. Click the Delete-button.
+4. The signup is deleted and you are directed to /register page, 
+but since you don't have ADMIN access you are redirected to /error page.
+
+To fix this you need to enable class annotation 
+@EnableGlobalMethodSecurity(securedEnabled = true, proxyTargetClass = true)
+in Security configuration class and method annotation
+@Secured("ADMIN") 
+in the SignupController.java class.
+This will provide method level authorization.
+
+

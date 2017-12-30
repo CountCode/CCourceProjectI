@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Sign up</title>
+    </head>
+    <body>
+
+        <h1>Signup</h1>
+
+            <form th:action="@{/signup/{id}(id=${signup.id})}" th:method="DELETE" >
+                <span th:utext="${signup.name}">signup</span><!-- A3 fix th:text=... -->
+                <span th:utext="${signup.address}">signup</span><!-- A3 fix th:text=... -->                
+                <input type="submit" value="Delete"/>
+            </form>       
+        
+    </body>
+</html>

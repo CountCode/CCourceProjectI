@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Register</title>
+    </head>
+    <body>
+
+        <h1>Registered</h1>
+    
+        <form action="#" th:action="@{/signup}" method="GET">
+            <p><label for="who">Query Name</label>: <input type="text" name="who" id="who"/></p>
+            <p><input type="submit" value="Submit" /></p>
+        </form>
+        
+        <ul>
+            <li th:each="signup : ${signups}">
+                <form th:action="@{/signup/{id}(id=${signup.id})}" th:method="GET" >
+                    <span th:utext="${signup.name}">signup</span><!-- A3 fix th:text=...    -->
+                    <input type="submit" value="Edit"/>
+                </form>
+            </li>
+        </ul>        
+       
+
+        <h1>Feedback area</h1>        
+
+        <ul>
+            <li th:each="feedback : ${feedbacks}">
+                <form th:action="@{/feedback/{id}(id=${feedback.id})}" th:method="DELETE" >
+                    <span th:utext="${feedback.content}">feedback</span><!-- A3 fix th:text=...    -->
+                    <input type="submit" value="Delete"/>
+                </form>
+            </li>
+        </ul>
+
+        <p></p>
+    </body>
+</html>

@@ -1,11 +1,30 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>Thank you!</title>
+        <title>Signed up!</title>
     </head>
     <body>
 
-        <h1>Thank you! You have been signed up to the event!</h1>
+        <h1>You have been signed up to the event!</h1>
 
+        
+        <h1>Feedback area</h1>        
+
+        <ul th:each="feedback : ${feedbacks}">
+            <li>
+                <p th:utext="${feedback.content}">item name</p> <!-- A3 fix th:text=...    -->
+            </li>
+        </ul>
+        
+        <form action="#" th:action="@{/feedback}" method="POST">
+ <!--           <p><label for="content">content</label>: <input type="text" name="content" id="content"/></p>
+-->
+            <span>Content:</span>
+            <textarea name="content" rows="5" cols="30"></textarea><br/> 
+            <p><input type="checkbox" name="adm" value="adm" checked="true"/>To Admin</p>
+            <p><input type="checkbox" name="audience" value="audience"/>To Audience</p>
+            <p><input type="submit" value="Submit" /></p>
+        </form>        
+        
     </body>
 </html>
