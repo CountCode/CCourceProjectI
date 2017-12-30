@@ -2,7 +2,7 @@ Cyber Security Base - Course Project I (1000 words)
 
 APPLICATION DISCRIPTION
 
-The application is a simple signup, where people can signup, with their name and address (Which in this case are also their username and password). When their are signed up they can read and leave anonymous feedback. Feedback can be send to to Admin (ADMIN) or other Signups (USER) or both. Admin which has username "ted" and password "ted" has administrative view /register, where he can list signups, and comments that they have send to him or he can remove them. The admin can also query signups by name.
+The application is a simple signup, where people can signup, with their name and address (Which in this case are also their username and password). When their are signed up and logged in they can read and leave anonymous feedback. Feedback can be send to to Admin (ADMIN) or other Signups (USER) or both. Admin which has username "ted" and password "ted" has administrative view /register, where he can list signups, and comments that they have send to him or he can remove them. The admin can also query signups by name.
 
 APPLICATION SOURCE
 
